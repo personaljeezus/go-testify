@@ -18,7 +18,9 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	handler.ServeHTTP(responseRecorder, req)
 	body := responseRecorder.Body.String()
 	list := strings.Split(body, ",")
-	assert.Len(t, list, totalCount)
+	if assert.Len(t, list, totalCount) {
+		assert.Equal(t, assert.Len, totalCount)
+	}
 }
 func TestIsYourReqCorrect(t *testing.T) {
 	req := httptest.NewRequest("GET", "/cafe?count=4&city=moscow", nil)
@@ -32,7 +34,8 @@ func TestIfCityCorrect(t *testing.T) {
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
-	expected := 6
-	assert.Equal(t, len("moscow"), expected)
+	actualCity := req.URL.Query().Get("city")
+	expected := "moscow"
+	assert.Equal(t, actualCity, expected)
 
 }
